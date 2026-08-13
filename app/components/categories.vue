@@ -17,7 +17,7 @@
 
         <!-- Category Cards -->
         <div class="mt-12 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-6">
-            <NuxtLink v-for="(category, index) in categories" :key="category.name" to="/products" :class="[
+            <NuxtLink v-for="(category, index) in categories" :key="category.name" to="/" :class="[
                 'group rounded-2xl border border-border bg-card p-6 shadow-card transition-all hover:-translate-y-1 hover:border-primary',
                 index === 6
                     ? 'col-span-2 sm:col-start-2 lg:col-span-2 lg:col-start-3'

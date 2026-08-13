@@ -39,7 +39,7 @@ const services = [
 </script>
 
 <template>
-    <section class="mx-auto grid max-w-7xl items-center gap-12 px-5 pb-24 lg:grid-cols-2">
+    <section class="mx-auto grid max-w-7xl items-center gap-12 px-5 pb-24 lg:grid-cols-2" id="services">
         <!-- Image -->
         <div class="relative">
             <img :src="repairImg" alt="فني يقوم بإصلاح اللوحة الأم لجهاز لابتوب" width="1024" height="1024"

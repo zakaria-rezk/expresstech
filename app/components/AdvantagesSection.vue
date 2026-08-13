@@ -92,7 +92,7 @@ const bigStats = [
         </section>
 
         <!-- Brands -->
-        <section class="mx-auto max-w-7xl px-5 py-16 text-center">
+        <section class="mx-auto max-w-7xl px-5 py-16 text-center" id="brands">
             <h2 class="text-xl font-extrabold tracking-tight text-brand-ink">
                 العلامات التجارية والشركاء المعتمدون
             </h2>
