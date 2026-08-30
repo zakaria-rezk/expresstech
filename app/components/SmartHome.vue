@@ -122,12 +122,12 @@ const smartHomeFeatures = [
 
             <!-- Buttons -->
             <div class="flex shrink-0 flex-col gap-3 sm:flex-row">
-                <NuxtLink to="/smart-home"
+                <NuxtLink to="/SmartHome"
                     class="inline-flex h-11 items-center justify-center rounded-full bg-primary px-7 text-sm font-bold text-primary-foreground transition-opacity hover:opacity-90">
                     المنازل الذكية بالتفصيل
                 </NuxtLink>
 
-                <NuxtLink to="/about"
+                <NuxtLink to="/aboutUs"
                     class="inline-flex h-11 items-center justify-center rounded-full border border-border px-7 text-sm font-bold text-brand-ink transition-colors hover:border-primary hover:text-primary">
                     من نحن
                 </NuxtLink>
