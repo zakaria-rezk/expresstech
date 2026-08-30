@@ -46,6 +46,7 @@ useHead({
     <hero />
     <categories />
     <services />
+    <SmartHome />
     <AdvantagesSection />
     <contactUs />
 

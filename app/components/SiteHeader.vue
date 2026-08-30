@@ -10,11 +10,11 @@ const links = [
     label: "الرئيسية",
     to: "/",
   },
-  // {
-  //   label: "المنتجات",
-  //   to: "/products",
-  //   dropdown: true,
-  // },
+  {
+    label: "المنازل الذكية",
+    to: "/SmartHome",
+
+  },
   {
     label: "الخدمات",
     to: "#services",
@@ -25,7 +25,7 @@ const links = [
   },
   {
     label: "من نحن",
-    to: "/about",
+    to: "/aboutUs",
   },
   {
     label: "اتصل بنا",
@@ -37,7 +37,7 @@ const searchQuery = ref("");
 </script>
 
 <template>
-  <header class="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
+  <header class="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur" dir="rtl">
     <div class="mx-auto flex h-16 max-w-7xl items-center gap-6 px-5">
       <!-- Logo -->
       <NuxtLink to="/" aria-label="الصفحة الرئيسية - إكسبرس هاي تك"
