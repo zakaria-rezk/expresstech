@@ -49,7 +49,7 @@ const contactCards = [
   {
     title: "راسلنا عبر البريد الإلكتروني",
     lines: [
-      "express.hitech2021@gmail.com",
+      "info@express-hightech.com",
     ],
     Icon: Mail,
   },
