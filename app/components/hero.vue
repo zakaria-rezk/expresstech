@@ -123,12 +123,12 @@ const categories = [
 
                 <!-- Buttons -->
                 <div class="mt-8 flex flex-wrap gap-3">
-                    <NuxtLink to=""
+                    <!-- <NuxtLink to=""
                         class="inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-6 text-sm font-bold text-primary-foreground shadow-float transition-opacity hover:opacity-90">
                         تسوق الآن
 
                         <ArrowLeft class="h-4 w-4" />
-                    </NuxtLink>
+                    </NuxtLink> -->
 
                     <NuxtLink to="#services"
                         class="inline-flex h-12 items-center rounded-xl border-2 border-border bg-background px-6 text-sm font-bold text-brand-ink transition-colors hover:border-primary hover:text-primary">

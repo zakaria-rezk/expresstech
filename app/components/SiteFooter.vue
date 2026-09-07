@@ -101,9 +101,9 @@ const socials = [
 
         <ul class="mt-4 space-y-2.5">
           <li v-for="link in column.links" :key="link">
-            <a href="#" class="text-xs text-background/60 transition-colors hover:text-primary">
+            <p class="text-xs text-background/60 transition-colors hover:text-primary">
               {{ link }}
-            </a>
+            </p>
           </li>
         </ul>
       </div>
