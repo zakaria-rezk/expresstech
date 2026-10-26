@@ -6,48 +6,30 @@ import {
   Linkedin,
 } from "lucide-vue-next";
 
+import logo from "~/assets/express-hi-tech-logo-cropped.png";
+
 const footerColumns = [
   {
     title: "المنتجات",
     links: [
-      "الهواتف الذكية",
-      "أجهزة اللابتوب",
-      "أجهزة الكمبيوتر",
-      "الإكسسوارات",
-      "الشبكات",
-      "أنظمة الصوت",
+      { label: "الهواتف الذكية", href: "/#mobile-phones" },
+      { label: "أجهزة اللابتوب", href: "/#laptops" },
+      { label: "أجهزة الكمبيوتر", href: "/#laptops"},
+      { label: "الإكسسوارات", href: "/#mobile-phones" },
+      { label: "الشبكات", href: "/SmartHome" },
+      { label: "أنظمة الصوت", href: "/SmartHome" },
     ],
   },
   {
     title: "الخدمات",
     links: [
-      "صيانة الكمبيوتر",
-      "صيانة الهواتف الذكية",
-      "ترقية الأجهزة",
-      "إعداد الشبكات",
-      "الدعم الفني",
+      { label: "صيانة الكمبيوتر", href: "/#services" },
+      { label: "صيانة الهواتف الذكية", href: "/#services"},
+      { label: "ترقية الأجهزة", href: "/SmartHome" },
+      { label: "إعداد الشبكات", href: "/SmartHome" },
+      { label: "الدعم الفني", href: "/#contact" },
     ],
   },
-  // {
-  //   title: "الشركة",
-  //   links: [
-  //     "من نحن",
-  //     "فريق العمل",
-  //     "الوظائف",
-  //     "المدونة",
-  //     "الأخبار والإعلام",
-  //   ],
-  // },
-  // {
-  //   title: "الدعم",
-  //   links: [
-  //     "مركز المساعدة",
-  //     "تتبع الطلب",
-  //     "سياسة الاسترجاع",
-  //     "الضمان",
-  //     "تواصل معنا",
-  //   ],
-  // },
 ];
 
 const socials = [
@@ -56,14 +38,12 @@ const socials = [
     label: "فيسبوك",
     href: "https://www.facebook.com/express.hitech",
   },
-
   {
     Icon: Instagram,
     label: "إنستجرام",
     href: "https://www.instagram.com/express.hitech?igsh=ZmI5eHhocG45cmhk",
   },
-
-]; import logo from "~/assets/express-hi-tech-logo-cropped.png";
+];
 </script>
 
 <template>
@@ -73,7 +53,7 @@ const socials = [
       <!-- Brand -->
       <div>
         <NuxtLink to="/" aria-label="الصفحة الرئيسية - إكسبرس هاي تك"
-          class="group flex shrink-0 bg-gray-500 items-center rounded-xl p-1.5 transition-all duration-200 hover:bg-accent/50">
+          class="group flex shrink-0 items-center rounded-xl bg-gray-500 p-1.5 transition-all duration-200 hover:bg-accent/50">
           <img :src="logo" alt="إكسبرس هاي تك"
             class="h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-[1.03]" />
         </NuxtLink>
@@ -100,10 +80,11 @@ const socials = [
         </p>
 
         <ul class="mt-4 space-y-2.5">
-          <li v-for="link in column.links" :key="link">
-            <p class="text-xs text-background/60 transition-colors hover:text-primary">
-              {{ link }}
-            </p>
+          <li v-for="link in column.links" :key="link.label">
+            <NuxtLink :to="link.href"
+              class="inline-block text-xs text-background/60 transition-colors hover:text-primary">
+              {{ link.label }}
+            </NuxtLink>
           </li>
         </ul>
       </div>
@@ -119,7 +100,7 @@ const socials = [
         </p>
 
         <!-- Legal Links -->
-        <!-- <div class="flex gap-6">
+        <div class="flex gap-6">
           <NuxtLink to="/privacy" class="transition-colors hover:text-primary">
             سياسة الخصوصية
           </NuxtLink>
@@ -131,7 +112,7 @@ const socials = [
           <NuxtLink to="/cookies" class="transition-colors hover:text-primary">
             سياسة ملفات تعريف الارتباط
           </NuxtLink>
-        </div> -->
+        </div>
       </div>
     </div>
   </footer>

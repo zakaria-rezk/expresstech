@@ -1,788 +1,393 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import {
-  Cable,
-  Clapperboard,
-  Cpu,
-  Droplets,
-  Lightbulb,
-  Mic,
-  Moon,
-  Network,
-  Plane,
-  ScanEye,
-  ShieldCheck,
-  Speaker,
   Star,
-  Wifi,
+  Cpu,
+  Mic,
+  Shield,
   Zap,
-} from 'lucide-vue-next'
+  Sliders,
+  Home,
+  Volume2,
+  Lock,
+  Thermometer,
+  Lightbulb,
+  CheckCircle2,
+  Activity,
+} from "lucide-vue-next";
 
-import electricianPanel from '~/assets/electrician-panel.jpg'
-import smartHomeHero from '~/assets/smart-home-hero.jpg'
+// متغيرات التفاعل والمحاكاة للمشاهد الصوتية
+const activeScene = ref('cinema');
 
-// Reveal elements when they enter the viewport.
-const vReveal = {
-  mounted(el: HTMLElement, binding: { value?: number }) {
-    el.classList.add('motion-reveal')
-    el.style.setProperty('--reveal-delay', `${binding.value ?? 0}ms`)
+const triggerScene = (sceneKey: string) => {
+  activeScene.value = sceneKey;
+};
 
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      el.classList.add('is-visible')
-      return
-    }
+// رقم الواتساب الخاص بك (استبدله برقمك مع رمز الدولة بدون +)
+const whatsappNumber = "201234567890";
+const whatsappMessage = encodeURIComponent("مرحباً، أود الاستفسار عن خدمات تأسيس المنازل الذكية.");
+const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          el.classList.add('is-visible')
-          observer.unobserve(el)
-        }
-      },
-      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' },
-    )
-
-    observer.observe(el)
-
-      ; (
-        el as HTMLElement & {
-          _revealObserver?: IntersectionObserver
-        }
-      )._revealObserver = observer
-  },
-
-  unmounted(el: HTMLElement) {
-    ; (
-      el as HTMLElement & {
-        _revealObserver?: IntersectionObserver
-      }
-    )._revealObserver?.disconnect()
-  },
-}
-
+// بيانات خطوات التأسيس
 const infrastructureSteps = [
   {
-    icon: Lightbulb,
-    title: 'سحب خط المحايد (Neutral Wire) لعلب المفاتيح',
-    description:
-      'خط المحايد شرط أساسي لتغذية المفاتيح الذكية بالطاقة بشكل مستمر دون انقطاع، ويمنع الوميض أو إعادة التشغيل العشوائي للمفاتيح الذكية. نخطط لتوفيره في كل علبة مفاتيح منذ مرحلة العظم.',
+    title: "المخطط الهندسي والبنية التحتية",
+    description: "دراسة الفراغات وتوزيع مسارات الكابلات المحمية لمنع التداخل الكهرومغناطيسي وضمان سرعة نقل البيانات.",
+    icon: Cpu
   },
   {
-    icon: Cable,
-    title: 'فصل مسارات التيار الخفيف (Data / Bus Cables)',
-    description:
-      'تمدد كابلات الداتا والباص في مواسير مستقلة تماماً عن كابلات الجهد العالي، مع مسافات فصل هندسية معتمدة لمنع التداخل الكهرومغناطيسي (EMI) الذي يسبب تقطيع الإشارة وبطء الاستجابة.',
+    title: "تمديدات الكابلات الذكية (KNX & Ethernet)",
+    description: "تأسيس شبكة أسلاك مركزية تربط كل ركن في المنزل بلوحة التحكم الرئيسية دون الاعتماد الكلي على الواي فاي.",
+    icon: Zap
   },
   {
-    icon: Network,
-    title: 'أنظمة التمديد السلكي المركزي (KNX / Bus Systems)',
-    description:
-      'للفلل والقصور نعتمد أنظمة KNX السلكية المركزية بلوحات توزيع ذكية، لتمنحك أعلى درجات الموثوقية والاستقرار على المدى الطويل واستقلالية تامة عن الإنترنت.',
+    title: "تركيب لوحات التوزيع والمفاتيح الذكية",
+    description: "تركيب اللوحات الكهربائية الآمنة ومفاتيح اللمس الزجاجية المصممة بعناية لتناسب ديكورات منزلك الفاخر.",
+    icon: Shield
   },
   {
-    icon: Wifi,
-    title: 'تأسيس نقاط الوصول اللاسلكية (WiFi 6 / Zigbee)',
-    description:
-      'دراسة تغطية (Site Survey) وتوزيع نقاط وصول WiFi 6 ومكررات Zigbee / Z-Wave في مواقع محسوبة، لضمان صفر مناطق ميتة وتغطية متجانسة داخل المنزل وحول المسبح والحديقة.',
-  },
-]
+    title: "البرمجة المركزية واختبار السيناريوهات",
+    description: "ربط الأجهزة بالمنصة المركزية وضبط الأتمتة الكاملة واختبار الاستجابة الفورية للأوامر الصوتية والحركية.",
+    icon: Sliders
+  }
+];
 
+// الأنظمة الفرعية مع الصور
 const subsystems = [
   {
+    title: "الإضاءة الذكية والتحكم بالأجواء",
+    description: "إضاءة تفاعلية تتغير تدريجياً حسب الوقت، وحسب حالتك المزاجية، مع إمكانية التحكم في كل زاوية بدقة متناهية.",
     icon: Lightbulb,
-    title: 'التحكم الذكي بالإضاءة والمناخ',
-    description:
-      'تعتيم تدريجي (Dimming) لكل مجموعة إضاءة، ستائر وشتر كهربائية مبرمجة على شروق وغروب الشمس، وتكييف ذكي (HVAC) وترموستات تتكيف تلقائياً مع وجود الأشخاص في الغرفة ودرجة الحرارة الخارجية.',
-    tags: [
-      'تعتيم وتدرج لوني',
-      'ثرموستات تكييفي',
-      'استشعار الإشغال',
-      'ستائر وشتر آلية',
-    ],
+    image: "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?q=80&w=800&auto=format&fit=crop",
+    tags: ["DALI", "RGB Play", "Dimming", "Motion Sensor"]
   },
   {
-    icon: Speaker,
-    title: 'الأنظمة الصوتية والسينما المنزلية',
-    description:
-      'توزيع صوتي متعدد الغرف (Multi-Room) بمصادر مستقلة لكل منطقة، وغرف سينما مخفية بمعايرة صوتية احترافية، عزل أكوستيكي، وبروجكتور وشاشة تعمل ضمن مشهد واحد بلمسة زر.',
-    tags: [
-      'Multi-Room Audio',
-      'معايرة أكوستيك',
-      'تحكم بالمشاهد',
-      'سماعات مخفية',
-    ],
+    title: "التكييف والتحكم بالمناخ (HVAC)",
+    description: "تنظيم حرارة الغرف تلقائياً بناءً على وجود الأشخاص، وتوفير الطاقة عند مغادرة المنزل.",
+    icon: Thermometer,
+    image: "https://images.unsplash.com/photo-1585338107529-13afc5f02586?q=80&w=800&auto=format&fit=crop",
+    tags: ["Climate Control", "Smart Thermostat", "Energy Saving"]
   },
   {
-    icon: ShieldCheck,
-    title: 'الحماية والأمان الفائق',
-    description:
-      'أقفال ذكية ببصمة الإصبع والوجه، كاميرات بتقنية الذكاء الاصطناعي للتعرف على الوجوه وتمييز البشر عن الحيوانات، حساسات حركة محيطية، وحساسات تسريب مياه ودخان ترسل تنبيهاً فورياً لهاتفك على مدار الساعة.',
-    tags: [
-      'أقفال بيومترية',
-      'حساسات محيطية',
-      'إنذار تسريب ودخان',
-      'كاميرات AI',
-    ],
+    title: "الأمان وحماية المقدمة (Security)",
+    description: "كاميرات مراقبة ذكية بالذكاء الاصطناعي، مستشعرات حركة ودخان، وأقفال أبواب ذكية تعمل ببصمة الإصبع والوجه.",
+    icon: Lock,
+    image: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=800&auto=format&fit=crop",
+    tags: ["Face Recognition", "CCTV 4K", "Smart Locks", "Fire Alarm"]
   },
   {
-    icon: Droplets,
-    title: 'التحكم بالأجهزة والري الذكي',
-    description:
-      'ري آلي للحديقة يعتمد على بيانات الطقس ورطوبة التربة لتوفير استهلاك المياه، مع دمج أجهزة المطبخ الذكية والغسالات والمكانس الروبوتية ضمن نفس التطبيق ونفس المشاهد الآلية.',
-    tags: [
-      'ري حسب الطقس',
-      'حساسات رطوبة التربة',
-      'دمج أجهزة المطبخ',
-      'جدولة تلقائية',
-    ],
-  },
-]
+    title: "الأنظمة الصوتية والترفيهية المتكاملة",
+    description: "توزيع السماعات المخفية في كل الغرف لتستمتع بموسيقاك المفضلة أينما كنت، مع نظام سينما منزلية خارق.",
+    icon: Volume2,
+    image: "https://images.unsplash.com/photo-1545454675-3531b543be5d?q=80&w=800&auto=format&fit=crop",
+    tags: ["Multi-Room Audio", "Dolby Atmos", "Hi-Fi Speakers"]
+  }
+];
 
+// عقل النظام
 const thinkingCards = [
   {
-    icon: Cpu,
-    title: 'الوحدة المركزية (Hub)',
-    description:
-      'عقل النظام الذي يوحد البروتوكولات المختلفة (KNX, Zigbee, Z-Wave, Matter) ويشغل قواعد الأتمتة محليًا حتى عند انقطاع الإنترنت.',
+    title: "حساسات الذكاء (Sensors)",
+    description: "عيون وآذان المنزل التي ترصد الحركة، الإضاءة، الحرارة، ودخان الحريق لتتخذ القرار فوراً.",
+    image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?q=80&w=600&auto=format&fit=crop",
+    icon: Activity
   },
   {
-    icon: ScanEye,
-    title: 'الحساسات (Sensors)',
-    description:
-      'حواس المنزل: حركة، إضاءة محيطة، حرارة ورطوبة، فتح الأبواب وجودة الهواء – ترسل قراءاتها لحظيًا للوحدة المركزية لاتخاذ القرار.',
+    title: "العقل المركزى (The Hub)",
+    description: "المعالج المحلي الآمن الذي يجمع البيانات ويتخذ القرارات دون الحاجة لإنترنت خارجي، لحماية خصوصيتك.",
+    image: "https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=600&auto=format&fit=crop",
+    icon: Cpu
   },
   {
-    icon: Zap,
-    title: 'المشغلات (Actuators)',
-    description:
-      'الأذرع التنفيذية: ريليات الإضاءة، محركات الستائر، صمامات المياه ووحدات التكييف التي تنفذ الأوامر الصادرة عن الهب.',
-  },
-]
+    title: "المشغلات الآلية (Actuators)",
+    description: "الأذرع التنفيذية التي تغلق الستائر، تطفئ الأنوار، وتغلق محابس المياه عند حدوث أي طارئ.",
+    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=600&auto=format&fit=crop",
+    icon: Zap
+  }
+];
 
-const voiceScenes = [
-  {
-    icon: Plane,
-    title: '«تفعيل وضع السفر»',
-    description:
-      'إطفاء كامل للإضاءة والتكييف، إغلاق صمام المياه الرئيسي، تفعيل محاكاة التواجد، وتشغيل نظام الإنذار والكاميرات بالكامل.',
-  },
-  {
-    icon: Clapperboard,
-    title: '«مشهد السينما»',
-    description:
-      'خفض الإضاءة إلى 15%، إنزال الستائر والشاشة، تشغيل البروجكتور والريسيفر، وضبط حرارة الغرفة على الوضع المثالي.',
-  },
-  {
-    icon: Moon,
-    title: '«تصبح على خير»',
-    description:
-      'إطفاء إضاءة الأدوار، تفعيل إضاءة الممرات الليلية بالحركة، قفل الأبواب الذكية، وتشغيل حماية الطابق الأرضي.',
-  },
-]
-
-useHead({
-  title: 'المنازل الذكية | Nexus — تأسيس وتشغيل متكامل',
-  meta: [
-    {
-      name: 'description',
-      content:
-        'المركز المتكامل لتأسيس وتشغيل المنازل الذكية: تصميم البنية التحتية، تنفيذ التمديدات الهندسية، وبرمجة منزلك ليعمل بذكاء كامل بلمسة زر أو بأمر صوتي واحد.',
-    },
-    {
-      property: 'og:title',
-      content: 'المنازل الذكية | Nexus — تأسيس وتشغيل متكامل',
-    },
-    {
-      property: 'og:description',
-      content:
-        'من مرحلة العظم وحتى آخر مشهد صوتي — نصمم وننفذ ونبرمج منزلك الذكي بالكامل.',
-    },
-  ],
-})
+// المشاهد الصوتية
+const voiceScenesList = [
+  { key: 'cinema', title: 'سينما منزلية', desc: 'إغلاق الستائر، خفض الإضاءة لـ 10%، وتشغيل الشاشة', image: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=800&auto=format&fit=crop', icon: Home },
+  { key: 'sleep', title: 'مشهد النوم', desc: 'إطفاء كل أضواء المنزل، تفعيل المنبه، وضبط التكييف', image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=800&auto=format&fit=crop', icon: Shield },
+  { key: 'leave', title: 'مغادرة المنزل', desc: 'فصل الأجهزة غير الضرورية، وتفعيل نظام الإنذار', image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=800&auto=format&fit=crop', icon: Lock }
+];
 </script>
 
 <template>
-  <div class="min-h-screen bg-background">
-    <!-- Hero -->
-    <section dir="rtl" class="smart-hero relative overflow-hidden">
-      <img :src="smartHomeHero" alt="غرفة معيشة ذكية بإضاءة دافئة ولوحة تحكم ذكية" width="1920" height="1080"
-        class="hero-background absolute inset-0 h-full w-full object-cover" />
+  <div class="min-h-screen bg-background text-foreground overflow-x-hidden relative">
 
-      <div
-        class="hero-overlay absolute inset-0 bg-gradient-to-l from-[oklch(0.16_0.04_265/0.95)] via-[oklch(0.16_0.04_265/0.75)] to-[oklch(0.16_0.04_265/0.45)]" />
+    <!-- ================= Hero Section ================= -->
+    <section dir="rtl" class="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+      <div class="absolute inset-0 overflow-hidden">
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1920&auto=format&fit=crop"
+          alt="منزل ذكي متكامل" class="h-full w-full object-cover scale-105 animate-pulse duration-10000 opacity-40" />
+        <div class="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
+      </div>
 
-      <div
-        class="hero-content relative mx-auto flex min-h-[560px] max-w-7xl flex-col items-start justify-center gap-6 px-5 py-24">
-        <span
-          class="hero-kicker rounded-full border border-primary/40 bg-primary/10 px-4 py-1.5 text-sm font-bold text-primary">
-          خدمات بريميوم
-        </span>
+      <div class="relative mx-auto max-w-7xl px-5 py-24 text-center flex flex-col items-center z-10">
+        <div
+          class="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-5 py-2 text-sm font-bold text-primary backdrop-blur-md shadow-lg shadow-primary/10 mb-6 animate-bounce">
+          <Star class="h-4 w-4 fill-primary" />
+          <span>الجيل القادم من الرفاهية والتحكم الذكي</span>
+        </div>
 
-        <h1 class="hero-title max-w-3xl text-4xl font-extrabold leading-[1.25] text-white md:text-5xl">
-          المركز المتكامل لتأسيس وتشغيل
-          <br />
-          <span class="text-primary">المنازل الذكية</span>
-          <span class="text-white/60">(Smart Home)</span>
+        <h1 class="max-w-4xl text-4xl font-black tracking-tight leading-tight md:text-6xl lg:text-7xl">
+          اجعل منزلك يفكر، يشعر، ويتفاعل معك <br />
+          <span class="bg-gradient-to-r from-primary via-emerald-400 to-cyan-500 bg-clip-text text-transparent">
+            بذكاء كامل وأمان مطلق
+          </span>
         </h1>
 
-        <p class="hero-description max-w-2xl text-base leading-relaxed text-white/75 md:text-lg">
-          من مرحلة العظم وحتى آخر مشهد صوتي: نصمم البنية التحتية، ننفذ
-          التمديدات الهندسية، ونبرمج منزلك ليعمل بذكاء كامل — بلمسة زر أو بأمر
-          صوتي واحد.
+        <p class="mt-6 max-w-2xl text-base text-muted-foreground md:text-xl leading-relaxed">
+          نصمم وننفذ البنية التحتية، التمديدات الهندسية، والبرمجة المركزية لمنزلك الذكي — بخبرة هندسية دقيقة ومعايير
+          عالمية.
         </p>
 
-        <div class="hero-proof mt-4 flex items-center gap-4 rounded-2xl bg-card px-6 py-4 shadow-float">
-          <span class="grid h-12 w-12 place-items-center rounded-xl bg-primary/15">
-            <Star class="h-6 w-6 fill-primary text-primary" />
-          </span>
-
-          <div>
-            <p class="text-lg font-extrabold text-foreground">
-              +150 منزل ذكي تم تأسيسه بإتقان
-            </p>
-
-            <div class="mt-1 flex items-center gap-0.5">
-              <Star v-for="i in 5" :key="i" class="h-4 w-4 fill-primary text-primary" />
+        <div
+          class="mt-12 flex flex-wrap items-center justify-center gap-6 rounded-3xl border border-border/60 bg-card/60 p-6 backdrop-blur-xl shadow-2xl">
+          <div class="flex items-center gap-4 px-4">
+            <span class="grid h-12 w-12 place-items-center rounded-2xl bg-primary/20 text-primary">
+              <CheckCircle2 class="h-6 w-6" />
+            </span>
+            <div class="text-right">
+              <p class="text-2xl font-extrabold">+150</p>
+              <p class="text-xs text-muted-foreground">منزل ذكي تم تسليمه</p>
+            </div>
+          </div>
+          <div class="hidden sm:block h-10 w-[1px] bg-border" />
+          <div class="flex items-center gap-4 px-4">
+            <span class="grid h-12 w-12 place-items-center rounded-2xl bg-primary/20 text-primary">
+              <Star class="h-6 w-6 fill-primary" />
+            </span>
+            <div class="text-right">
+              <p class="text-2xl font-extrabold">100%</p>
+              <p class="text-xs text-muted-foreground">رضا العملاء والدعم المستمر</p>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Infrastructure -->
-    <section v-reveal dir="rtl" class="page-section bg-background py-20">
-      <div class="mx-auto grid max-w-7xl items-start gap-12 px-5 lg:grid-cols-2">
-        <div class="flex flex-col gap-6">
-          <span
-            class="w-fit rounded-full border border-primary/40 bg-primary/10 px-4 py-1.5 text-sm font-bold text-primary">
-            المرحلة الأولى — العظم والتأسيس
+    <!-- ================= Infrastructure Section ================= -->
+    <section dir="rtl" class="relative py-28 bg-muted/20">
+      <div class="mx-auto max-w-7xl px-5">
+
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <span class="rounded-full border border-primary/40 bg-primary/10 px-4 py-1.5 text-sm font-bold text-primary">
+            المرحلة الأولى — الهندسة والدقة
           </span>
-
-          <h2 class="text-3xl font-extrabold leading-snug text-foreground md:text-4xl">
-            تأسيس البنية التحتية والكهرباء
+          <h2 class="mt-4 text-3xl font-black md:text-5xl tracking-tight">
+            التأسيس الصحيح هو سر نجاح منزلك الذكي
           </h2>
-
-          <p class="leading-relaxed text-muted-foreground">
-            نجاح المنزل الذكي يتحدد قبل تركيب أي جهاز. في مرحلة التأسيس نضع
-            مخططاً هندسياً دقيقاً للمواسير والمسارات ولوحة التوزيع، لأن أي خطأ
-            هنا يكلّف تكسير الجدران لاحقاً.
+          <p class="mt-3 text-muted-foreground">
+            نبني منزلك الذكي من البذرة الأولى (مرحلة العظم) لضمان استقرار النظام لأعوام طويلة دون أي أعطال أو تكسير
+            بالجدران.
           </p>
-
-          <div class="overflow-hidden rounded-2xl border border-border shadow-card">
-            <img :src="electricianPanel" alt="مهندس كهرباء يراجع مخطط التمديدات أمام لوحة توزيع منظمة" loading="lazy"
-              width="1024" height="1024" class="h-full w-full object-cover" />
-          </div>
         </div>
 
-        <!-- Steps -->
-        <ol class="flex flex-col gap-5">
-          <li v-for="(step, i) in infrastructureSteps" :key="step.title" v-reveal="i * 90"
-            class="motion-card relative rounded-2xl border border-border bg-card p-6 shadow-card transition-shadow hover:shadow-float">
-            <div class="flex items-start gap-4">
-              <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-primary/15">
-                <component :is="step.icon" class="h-5 w-5 text-primary" />
-              </span>
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div class="relative group">
+            <div
+              class="absolute -inset-1 rounded-3xl bg-gradient-to-r from-primary to-cyan-500 opacity-30 blur-xl transition duration-500 group-hover:opacity-60" />
+            <div class="relative overflow-hidden rounded-3xl border border-border bg-card shadow-2xl">
+              <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=1024&auto=format&fit=crop"
+                alt="هندسة التمديدات الذكية"
+                class="w-full h-[450px] object-cover transition-transform duration-700 group-hover:scale-105" />
+            </div>
+          </div>
 
-              <div>
-                <h3 class="text-lg font-bold text-foreground">
-                  {{ step.title }}
-                </h3>
-
-                <p class="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {{ step.description }}
-                </p>
+          <div class="space-y-4">
+            <div v-for="(step, i) in infrastructureSteps" :key="step.title"
+              class="group relative rounded-2xl border border-border/80 bg-card/80 p-5 shadow-sm transition-all duration-300 hover:border-primary/60 hover:bg-card hover:shadow-xl hover:-translate-x-1">
+              <div class="flex items-start gap-4">
+                <span
+                  class="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-primary/15 text-primary transition-transform duration-300 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground">
+                  <component :is="step.icon" class="h-6 w-6" />
+                </span>
+                <div>
+                  <div class="flex items-center justify-between">
+                    <h3 class="text-base font-bold text-foreground group-hover:text-primary transition-colors">
+                      {{ step.title }}
+                    </h3>
+                    <span class="text-xs font-mono font-bold text-primary/60">0{{ i + 1 }}</span>
+                  </div>
+                  <p class="mt-1 text-sm text-muted-foreground leading-relaxed">
+                    {{ step.description }}
+                  </p>
+                </div>
               </div>
             </div>
+          </div>
+        </div>
 
-            <span class="absolute left-5 top-4 text-xs font-bold text-primary/70">
-              {{ String(i + 1).padStart(2, '0') }}
-            </span>
-          </li>
-        </ol>
       </div>
     </section>
 
-    <!-- Subsystems -->
-    <section v-reveal dir="rtl" class="page-section bg-muted/40 py-20">
-      <div class="mx-auto flex max-w-7xl flex-col items-center gap-4 px-5 text-center">
-        <span
-          class="hero-kicker rounded-full border border-primary/40 bg-primary/10 px-4 py-1.5 text-sm font-bold text-primary">
-          الأنظمة الفرعية
-        </span>
+    <!-- ================= Subsystems Section ================= -->
+    <section dir="rtl" class="py-28">
+      <div class="mx-auto max-w-7xl px-5">
 
-        <h2 class="text-3xl font-extrabold leading-snug text-foreground md:text-4xl">
-          كل ما يمكن أتمتته في المنزل الذكي
-        </h2>
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <span class="rounded-full border border-primary/40 bg-primary/10 px-4 py-1.5 text-sm font-bold text-primary">
+            الأنظمة الفرعية الشاملة
+          </span>
+          <h2 class="mt-4 text-3xl font-black md:text-5xl tracking-tight">
+            كل زاوية في منزلك تتحول إلى تحفة ذكية
+          </h2>
+          <p class="mt-3 text-muted-foreground">
+            أنظمة مستقلة بقوتها، متكاملة بتشغيلها، تدار من واجهة موحدة على هاتفك أو شاشات الحائط.
+          </p>
+        </div>
 
-        <p class="max-w-2xl leading-relaxed text-muted-foreground">
-          أنظمة مستقلة في التنفيذ، متكاملة في التشغيل — تدار جميعها من تطبيق
-          واحد ولوحة تحكم مركزية واحدة.
-        </p>
-      </div>
-
-      <div class="subsystems-list mx-auto mt-12 flex max-w-7xl flex-col gap-5 px-5">
-        <article v-for="system in subsystems" :key="system.title" v-reveal="0"
-          class="motion-card rounded-2xl border border-border bg-card p-6 shadow-card transition-shadow hover:shadow-float md:p-8">
-          <div class="flex flex-col gap-5 lg:flex-row lg:items-center lg:gap-8">
-            <div class="flex flex-1 items-start gap-4">
-              <span class="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-primary/15">
-                <component :is="system.icon" class="h-6 w-6 text-primary" />
+        <div class="grid md:grid-cols-2 gap-8">
+          <div v-for="system in subsystems" :key="system.title"
+            class="group relative overflow-hidden rounded-3xl border border-border/80 bg-card shadow-xl transition-all duration-500 hover:border-primary/50 hover:shadow-2xl hover:-translate-y-1.5 flex flex-col justify-between">
+            <div class="relative h-56 w-full overflow-hidden">
+              <div class="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent z-10" />
+              <img :src="system.image" :alt="system.title"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+              <span
+                class="absolute top-4 right-4 z-20 grid h-12 w-12 place-items-center rounded-2xl bg-card/90 backdrop-blur-md text-primary shadow-lg">
+                <component :is="system.icon" class="h-6 w-6" />
               </span>
+            </div>
 
+            <div class="p-8 pt-2 flex flex-col flex-1 justify-between gap-6">
               <div>
-                <h3 class="text-lg font-bold text-foreground md:text-xl">
+                <h3 class="text-2xl font-black text-foreground group-hover:text-primary transition-colors">
                   {{ system.title }}
                 </h3>
 
-                <p class="mt-2 text-sm leading-relaxed text-muted-foreground md:text-base">
+                <p class="mt-3 text-sm text-muted-foreground leading-relaxed">
                   {{ system.description }}
+                </p>
+              </div>
+
+              <div class="flex flex-wrap gap-2 pt-4 border-t border-border/60">
+                <span v-for="tag in system.tags" :key="tag"
+                  class="rounded-lg bg-muted/60 px-3 py-1 text-xs font-semibold text-muted-foreground transition-colors group-hover:bg-primary/10 group-hover:text-primary">
+                  # {{ tag }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= Hub / Sensors & Live Voice Simulator ================= -->
+    <section dir="rtl" class="py-28 bg-muted/20 border-y border-border/40">
+      <div class="mx-auto max-w-7xl px-5">
+
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <span class="rounded-full bg-primary px-4 py-1.5 text-sm font-bold text-primary-foreground shadow-md">
+            دماغ النظام والمشغلات
+          </span>
+          <h2 class="mt-4 text-3xl font-black md:text-5xl tracking-tight">
+            كيف يفكّر منزلك في أجزاء من الثانية؟
+          </h2>
+          <p class="mt-3 text-muted-foreground">
+            دورة ذكية متكاملة: الحساس يقرأ البيئة، الهب يحلل ويقرر، والمشغل ينفذ بدقة فورية.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8 mb-20">
+          <div v-for="card in thinkingCards" :key="card.title"
+            class="group overflow-hidden rounded-3xl border border-border bg-card shadow-lg transition-all duration-300 hover:border-primary/50 hover:-translate-y-2 hover:shadow-2xl flex flex-col">
+            <div class="relative h-48 w-full overflow-hidden">
+              <div class="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent z-10" />
+              <img :src="card.image" :alt="card.title"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+              <span
+                class="absolute top-4 right-4 z-20 grid h-12 w-12 place-items-center rounded-2xl bg-card/90 backdrop-blur-md text-primary shadow-lg">
+                <component :is="card.icon" class="h-6 w-6" />
+              </span>
+            </div>
+
+            <div class="p-8 pt-2 flex flex-col flex-1 justify-between">
+              <div>
+                <h3 class="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+                  {{ card.title }}
+                </h3>
+                <p class="mt-3 text-sm text-muted-foreground leading-relaxed">
+                  {{ card.description }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="relative overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-card to-card/50 p-8 md:p-12 shadow-2xl">
+          <div class="absolute -left-20 -bottom-20 h-60 w-60 rounded-full bg-primary/10 blur-3xl pointer-events-none" />
+
+          <div class="flex flex-col md:flex-row items-center justify-between gap-8 mb-8">
+            <div>
+              <div class="flex items-center gap-2 text-primary font-bold text-sm mb-2">
+                <Mic class="h-5 w-5 animate-pulse" />
+                <span>محاكي الأوامر الصوتية والمشاهد الذكية</span>
+              </div>
+              <h3 class="text-2xl md:text-3xl font-black">جرب تأثير المشاهد بضغطة زر</h3>
+            </div>
+
+            <div class="flex flex-wrap gap-2 bg-muted/60 p-2 rounded-2xl border border-border">
+              <button v-for="scene in voiceScenesList" :key="scene.key" @click="triggerScene(scene.key)" :class="[
+                'px-4 py-2 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer',
+                activeScene === scene.key ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'
+              ]">
+                {{ scene.title }}
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="relative overflow-hidden rounded-2xl border border-border/80 p-6 md:p-8 backdrop-blur-md flex flex-col md:flex-row items-center justify-between gap-6 transition-all duration-500 shadow-xl">
+            <div class="absolute inset-0 z-0">
+              <img :src="voiceScenesList.find(s => s.key === activeScene)?.image" alt="Active Scene Background"
+                class="w-full h-full object-cover opacity-20 transition-all duration-700 scale-105" />
+              <div class="absolute inset-0 bg-card/90" />
+            </div>
+
+            <div class="relative z-10 flex items-center gap-4">
+              <span class="grid h-14 w-14 place-items-center rounded-2xl bg-primary/20 text-primary">
+                <Activity class="h-7 w-7 animate-pulse" />
+              </span>
+              <div>
+                <p class="text-xs text-primary font-bold uppercase tracking-wider">الحالة الحالية تنفذ الآن عبر الأوامر
+                  الصوتية:</p>
+                <h4 class="text-xl font-black mt-1 text-foreground">
+                  {{voiceScenesList.find(s => s.key === activeScene)?.title}}
+                </h4>
+                <p class="text-sm text-muted-foreground mt-1">
+                  {{voiceScenesList.find(s => s.key === activeScene)?.desc}}
                 </p>
               </div>
             </div>
 
-            <div class="flex flex-wrap gap-2 lg:w-72 lg:shrink-0 lg:justify-end">
-              <span v-for="tag in system.tags" :key="tag"
-                class="rounded-full border border-border bg-muted/50 px-3 py-1 text-xs font-medium text-muted-foreground">
-                {{ tag }}
-              </span>
+            <div
+              class="relative z-10 flex items-center gap-2 text-xs font-mono bg-primary/10 text-primary px-4 py-2 rounded-xl border border-primary/20">
+              <span class="h-2 w-2 rounded-full bg-green-500 animate-ping" />
+              متوافق مع Apple HomeKit & Alexa
             </div>
           </div>
-        </article>
+
+        </div>
+
       </div>
     </section>
 
-    <!-- Hub / Sensors / Actuators -->
-    <section v-reveal dir="rtl" class="page-section bg-background py-20">
-      <div class="mx-auto flex max-w-7xl flex-col items-center gap-4 px-5 text-center">
-        <span class="rounded-full bg-primary px-4 py-1.5 text-sm font-bold text-primary-foreground">
-          عقل النظام والمشغلات
-        </span>
+    <!-- ================= زر الواتساب العائم الثابت ================= -->
+    <a :href="whatsappUrl" target="_blank" rel="noopener noreferrer" aria-label="تواصل معنا عبر واتساب"
+      class="fixed bottom-6 left-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-[#25D366]/35 transition-all duration-300 ease-in-out hover:scale-110 hover:shadow-xl hover:shadow-[#25D366]/50 focus:outline-none focus:ring-4 focus:ring-[#25D366]/40 active:scale-95 group">
+      <svg class="h-7 w-7 fill-current transition-transform duration-300 group-hover:rotate-12" viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.572-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.461c-1.926 0-3.815-.515-5.467-1.49l-.392-.233-4.067 1.066 1.087-3.961-.257-.409C1.94 15.168 1.4 13.111 1.4 10.978 1.4 5.476 5.898.978 11.455.978c2.69 0 5.218 1.048 7.12 2.95 1.902 1.902 2.949 4.431 2.948 7.121 0 5.503-4.498 10.001-10.057 10.001m0-18.461c-4.665 0-8.461 3.796-8.461 8.46 0 1.83.585 3.55 1.684 4.975l.259.336-.665 2.427 2.484-.651.327.207c1.378.875 2.987 1.337 4.372 1.337 4.665 0 8.461-3.796 8.461-8.46 0-4.664-3.796-8.46-8.461-8.46" />
+      </svg>
+      <span class="absolute -z-10 h-full w-full animate-ping rounded-full bg-[#25D366] opacity-40"></span>
+    </a>
 
-        <h2 class="max-w-3xl text-3xl font-extrabold leading-snug text-foreground md:text-4xl">
-          كيف يفكّر منزلك؟ الهب والحساسات والمشغلات
-        </h2>
-
-        <p class="max-w-2xl leading-relaxed text-muted-foreground">
-          الحساس يقرأ، الهب يقرر، والمشغل ينفذ. هذه الدورة الثلاثية تتم في أجزاء
-          من الثانية وهي أساس كل مشهد آلي داخل المنزل.
-        </p>
-      </div>
-
-      <div class="thinking-grid mx-auto mt-12 grid max-w-7xl gap-5 px-5 md:grid-cols-3">
-        <article v-for="card in thinkingCards" :key="card.title" v-reveal="0"
-          class="motion-card rounded-2xl border border-border bg-card p-6 text-center shadow-card transition-shadow hover:shadow-float">
-          <span class="mx-auto grid h-14 w-14 place-items-center rounded-full bg-primary/15">
-            <component :is="card.icon" class="h-7 w-7 text-primary" />
-          </span>
-
-          <h3 class="mt-4 text-lg font-bold text-foreground">
-            {{ card.title }}
-          </h3>
-
-          <p class="mt-2 text-sm leading-relaxed text-muted-foreground">
-            {{ card.description }}
-          </p>
-        </article>
-      </div>
-
-      <!-- Voice scenes -->
-      <div class="relative mx-auto mt-8 max-w-7xl rounded-3xl border border-border bg-muted/40 p-6 md:p-10">
-        <span class="absolute -top-5 right-8 grid h-10 w-10 place-items-center rounded-xl bg-primary shadow-float">
-          <Mic class="h-5 w-5 text-primary-foreground" />
-        </span>
-
-        <div class="flex flex-col items-center gap-3 text-center">
-          <h3 class="text-2xl font-extrabold text-foreground">
-            المساعدات الصوتية والمشاهد الجاهزة
-          </h3>
-
-          <p class="max-w-3xl leading-relaxed text-muted-foreground">
-            توافق كامل مع Amazon Alexa, Google Assistant, Apple HomeKit. مع
-            برمجة مشاهد صوتية (Macros) تنفذ عشرات الأوامر بجملة واحدة.
-          </p>
-        </div>
-
-        <div class="mt-8 grid gap-5 md:grid-cols-3">
-          <article v-for="scene in voiceScenes" :key="scene.title" v-reveal="0"
-            class="motion-card rounded-2xl border border-border bg-card p-6 shadow-card">
-            <div class="flex items-center gap-3">
-              <span class="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-primary/15">
-                <component :is="scene.icon" class="h-5 w-5 text-primary" />
-              </span>
-
-              <h4 class="font-bold text-foreground">
-                {{ scene.title }}
-              </h4>
-            </div>
-
-            <p class="mt-3 text-sm leading-relaxed text-muted-foreground">
-              {{ scene.description }}
-            </p>
-          </article>
-        </div>
-      </div>
-
-      <!-- Buttons -->
-      <div class="mx-auto mt-10 flex max-w-7xl flex-col items-center justify-center gap-4 px-5 sm:flex-row">
-        <NuxtLink to="/"
-          class="inline-flex h-12 w-full items-center justify-center rounded-xl border border-border bg-card px-8 text-sm font-bold text-foreground transition hover:bg-muted/50 sm:w-auto">
-          العودة للرئيسية
-        </NuxtLink>
-      </div>
-    </section>
   </div>
 </template>
-
-<style scoped>
-/* Smart-home cinematic hero */
-.smart-hero {
-  isolation: isolate;
-  min-height: 620px;
-  background: #101827;
-}
-
-.smart-hero::before,
-.smart-hero::after {
-  content: "";
-  position: absolute;
-  z-index: 1;
-  pointer-events: none;
-  border-radius: 999px;
-}
-
-.smart-hero::before {
-  width: 32rem;
-  height: 32rem;
-  top: -12rem;
-  left: -8rem;
-  border: 1px solid rgb(255 255 255 / 10%);
-  box-shadow:
-    0 0 0 45px rgb(255 255 255 / 2%),
-    0 0 0 90px rgb(255 255 255 / 1.5%);
-  animation: orbitDrift 18s ease-in-out infinite alternate;
-}
-
-.smart-hero::after {
-  width: 24rem;
-  height: 24rem;
-  bottom: -14rem;
-  right: 15%;
-  background: color-mix(in srgb,
-      var(--color-primary) 20%,
-      transparent);
-  filter: blur(90px);
-  animation: ambientPulse 7s ease-in-out infinite;
-}
-
-.hero-background {
-  transform: scale(1.08);
-  animation:
-    heroImageIn 1.8s cubic-bezier(.16, 1, .3, 1) both,
-    heroKenBurns 24s ease-in-out 1.8s infinite alternate;
-  will-change: transform;
-}
-
-.hero-overlay {
-  background-size: 200% 100%;
-  animation: overlaySweep 1.6s ease-out both;
-}
-
-.hero-content {
-  z-index: 2;
-}
-
-.hero-kicker,
-.hero-title,
-.hero-description,
-.hero-proof {
-  opacity: 0;
-  animation: heroTextReveal .85s cubic-bezier(.16, 1, .3, 1) both;
-}
-
-.hero-kicker {
-  animation-delay: .15s;
-}
-
-.hero-title {
-  animation-delay: .3s;
-}
-
-.hero-description {
-  animation-delay: .48s;
-}
-
-.hero-proof {
-  animation-delay: .68s;
-}
-
-.hero-kicker {
-  box-shadow: 0 0 0 0 color-mix(in srgb,
-      var(--color-primary) 24%,
-      transparent);
-  animation-name: heroTextReveal, kickerPulse;
-  animation-duration: .85s, 3.5s;
-  animation-delay: .15s, 1.5s;
-  animation-iteration-count: 1, infinite;
-}
-
-.hero-title span.text-primary {
-  display: inline-block;
-  text-shadow: 0 0 28px color-mix(in srgb,
-      var(--color-primary) 22%,
-      transparent);
-}
-
-.hero-proof {
-  border: 1px solid rgb(255 255 255 / 12%);
-  box-shadow: 0 20px 60px -30px rgb(0 0 0 / 45%);
-  animation-name: heroTextReveal, proofFloat;
-  animation-duration: .85s, 6s;
-  animation-delay: .68s, 1.6s;
-  animation-iteration-count: 1, infinite;
-  transition: transform .3s ease, box-shadow .3s ease;
-}
-
-.hero-proof:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 25px 65px -28px color-mix(in srgb,
-      var(--color-primary) 28%,
-      transparent);
-}
-
-@keyframes heroImageIn {
-  from {
-    opacity: .35;
-    transform: scale(1.16);
-    filter: blur(5px);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1.08);
-    filter: blur(0);
-  }
-}
-
-@keyframes heroKenBurns {
-  from {
-    transform: scale(1.08) translate3d(0, 0, 0);
-  }
-
-  to {
-    transform: scale(1.15) translate3d(1%, -1%, 0);
-  }
-}
-
-@keyframes overlaySweep {
-  from {
-    background-position: 100% 0;
-    opacity: .65;
-  }
-
-  to {
-    background-position: 0 0;
-    opacity: 1;
-  }
-}
-
-@keyframes heroTextReveal {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-    filter: blur(7px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-  }
-}
-
-@keyframes kickerPulse {
-
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 color-mix(in srgb,
-        var(--color-primary) 0%,
-        transparent);
-  }
-
-  50% {
-    box-shadow: 0 0 0 7px color-mix(in srgb,
-        var(--color-primary) 10%,
-        transparent);
-  }
-}
-
-@keyframes proofFloat {
-
-  0%,
-  100% {
-    translate: 0 0;
-  }
-
-  50% {
-    translate: 0 -5px;
-  }
-}
-
-@keyframes orbitDrift {
-  from {
-    transform: translate3d(0, 0, 0) rotate(0);
-  }
-
-  to {
-    transform: translate3d(24px, 18px, 0) rotate(8deg);
-  }
-}
-
-@keyframes ambientPulse {
-
-  0%,
-  100% {
-    opacity: .45;
-    transform: scale(.9);
-  }
-
-  50% {
-    opacity: .85;
-    transform: scale(1.12);
-  }
-}
-
-/* Scroll-triggered reveals */
-.motion-reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  filter: blur(3px);
-  transition:
-    opacity .75s cubic-bezier(.16, 1, .3, 1),
-    transform .75s cubic-bezier(.16, 1, .3, 1),
-    filter .75s cubic-bezier(.16, 1, .3, 1);
-  transition-delay: var(--reveal-delay, 0ms);
-}
-
-.motion-reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-  filter: blur(0);
-}
-
-.motion-card {
-  position: relative;
-  transition:
-    transform .35s cubic-bezier(.16, 1, .3, 1),
-    border-color .35s ease,
-    box-shadow .35s ease;
-}
-
-.motion-card:hover {
-  transform: translateY(-5px);
-  border-color: color-mix(in srgb,
-      var(--color-primary) 38%,
-      transparent);
-  box-shadow: 0 18px 42px -26px color-mix(in srgb,
-      var(--color-primary) 35%,
-      transparent);
-}
-
-.motion-card>div>span:first-child,
-.motion-card>span:first-child {
-  transition:
-    transform .4s cubic-bezier(.16, 1, .3, 1),
-    background-color .3s ease;
-}
-
-.motion-card:hover>div>span:first-child,
-.motion-card:hover>span:first-child {
-  transform: scale(1.06);
-  background-color: color-mix(in srgb,
-      var(--color-primary) 18%,
-      transparent);
-}
-
-/* Infrastructure steps gain a fine leading accent */
-ol .motion-reveal::before {
-  content: "";
-  position: absolute;
-  right: 0;
-  top: 18px;
-  bottom: 18px;
-  width: 2px;
-  border-radius: 999px;
-  background: var(--color-primary);
-  transform: scaleY(0);
-  transform-origin: top;
-  transition: transform .55s cubic-bezier(.16, 1, .3, 1) .2s;
-}
-
-ol .motion-reveal.is-visible::before {
-  transform: scaleY(1);
-}
-
-/* Subtle system tags */
-.subsystems-list article span.rounded-full {
-  transition:
-    border-color .3s ease,
-    background-color .3s ease,
-    transform .3s ease;
-}
-
-.subsystems-list article:hover span.rounded-full {
-  border-color: color-mix(in srgb,
-      var(--color-primary) 25%,
-      transparent);
-}
-
-.thinking-grid article:hover {
-  transform: translateY(-6px);
-}
-
-/* Small screens and reduced motion */
-@media (max-width: 640px) {
-  .smart-hero {
-    min-height: 560px;
-  }
-
-  .smart-hero::before {
-    width: 20rem;
-    height: 20rem;
-  }
-
-  .smart-hero::after {
-    width: 16rem;
-    height: 16rem;
-  }
-
-  .hero-proof {
-    max-width: 100%;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-
-  *,
-  *::before,
-  *::after {
-    animation-duration: .01ms !important;
-    animation-delay: 0ms !important;
-    animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
-    transition-duration: .01ms !important;
-  }
-
-  .motion-reveal {
-    opacity: 1;
-    transform: none;
-    filter: none;
-  }
-
-  .hero-kicker,
-  .hero-title,
-  .hero-description,
-  .hero-proof {
-    opacity: 1;
-    filter: none;
-  }
-}
-</style>
