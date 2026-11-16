@@ -55,7 +55,7 @@ const closeMobileMenu = () => {
 </script>
 
 <template>
-  <header class="fixed inset-x-0 top-0 z-50 transition-all duration-300" :class="solid
+  <header class="fixed inset-x-0 top-0 z-50 transition-all duration-300" dir="rtl" :class="solid
     ? 'border-b border-border bg-background/90 shadow-sm backdrop-blur-xl'
     : 'border-b border-transparent bg-transparent'">
     <!-- Main Header -->
