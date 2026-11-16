@@ -6,7 +6,21 @@ import {
   ShoppingCart,
   X,
 } from "lucide-vue-next";
+const route = useRoute()
+const scrolled = ref(false)
 
+const onScroll = () => {
+  scrolled.value = window.scrollY > 20
+}
+
+onMounted(() => {
+  onScroll()
+  window.addEventListener('scroll', onScroll, { passive: true })
+})
+onBeforeUnmount(() => window.removeEventListener('scroll', onScroll))
+
+// transparent only on the home page, solid everywhere else
+const solid = computed(() => scrolled.value || route.path !== '/')
 import logo from "~/assets/express-hi-tech-logo-cropped.png";
 
 const links = [
@@ -41,7 +55,9 @@ const closeMobileMenu = () => {
 </script>
 
 <template>
-  <header class="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur" dir="rtl">
+  <header class="fixed inset-x-0 top-0 z-50 transition-all duration-300" :class="solid
+    ? 'border-b border-border bg-background/90 shadow-sm backdrop-blur-xl'
+    : 'border-b border-transparent bg-transparent'">
     <!-- Main Header -->
     <div class="mx-auto flex h-16 max-w-7xl items-center gap-6 px-5">
       <!-- Logo -->
@@ -53,7 +69,9 @@ const closeMobileMenu = () => {
       </NuxtLink>
 
       <!-- Desktop Navigation -->
-      <nav class="hidden flex-1 items-center justify-center gap-7 md:flex">
+      <nav class="hidden flex-1 items-center justify-center gap-7 md:flex" :class="solid
+        ? 'text-muted-foreground hover:text-primary'
+        : 'text-white/90 hover:text-white'">
         <NuxtLink v-for="link in links" :key="link.label" :to="link.to"
           class="flex items-center gap-1 text-sm font-semibold text-muted-foreground transition-colors hover:text-primary">
           {{ link.label }}
@@ -65,7 +83,7 @@ const closeMobileMenu = () => {
 
       <!-- Mobile Actions -->
       <div class="mr-auto flex items-center gap-2 md:hidden">
-   
+
 
         <!-- Mobile Menu Button -->
         <button type="button" :aria-expanded="isMobileMenuOpen" aria-label="فتح القائمة"
@@ -105,7 +123,7 @@ const closeMobileMenu = () => {
             </NuxtLink>
           </nav>
 
-   
+
         </div>
       </div>
     </Transition>

@@ -12,10 +12,8 @@ import {
   Zap,
 } from "lucide-vue-next";
 
-import laptopImg from "~/assets/laptop.png";
-import phoneImg from "~/assets/phone.png";
-import headphonesImg from "~/assets/headphones.png";
-import monitorImg from "~/assets/expresstech-enhanced-1080p (1).mp4";
+import monitorImg from "~/assets/WhatsApp Video 2026-11-16 at 11.34.29 AM.mp4";
+import hero from "~/assets/expresstech-enhanced-1080p (1).mp4";
 useHead({
   htmlAttrs: {
     lang: "ar",
@@ -60,16 +58,11 @@ const categories = [
 <template>
   <main class="hero-main relative overflow-hidden">
     <!-- Ambient background -->
-    <div class="hero-ambient pointer-events-none absolute inset-0 -z-10">
-      <div class="ambient-orb ambient-orb-one"></div>
-      <div class="ambient-orb ambient-orb-two"></div>
-    </div>
-
     <!-- Hero Section -->
-    <section class="relative isolate flex min-h-[85vh] items-center py-12 justify-center overflow-hidden">
+    <section class="relative isolate flex w-full items-center justify-center overflow-hidden py-12 md:aspect-video">
       <!-- Background Video -->
-      <video class="absolute inset-0 -z-20 h-full w-full object-cover" :src="monitorImg" autoplay muted loop
-        playsinline preload="auto" aria-hidden="true"></video>
+      <video class="absolute inset-0 -z-20 h-full w-full object-cover" :src="monitorImg" autoplay muted loop playsinline
+        preload="auto" aria-hidden="true"></video>
 
       <!-- Dark overlay for text readability -->
       <div class="absolute inset-0 -z-10 bg-gradient-to-b from-black/70 via-black/55 to-black/75"></div>
