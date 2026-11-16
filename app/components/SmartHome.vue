@@ -7,7 +7,8 @@ import {
   Star,
 } from "lucide-vue-next";
 
-import smartHomeImg from "~/assets/smart-home.jpg";
+// import smartHomeImg from "~/assets/smart-home.jpg";
+import smartHomeImg from "~/assets/istockphoto-2272234403-1024x1024.jpg";
 
 const smartHomeFeatures = [
   {

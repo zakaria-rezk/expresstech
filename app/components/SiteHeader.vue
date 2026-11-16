@@ -53,7 +53,6 @@ const closeMobileMenu = () => {
   isMobileMenuOpen.value = false;
 };
 </script>
-
 <template>
   <header class="fixed inset-x-0 top-0 z-50 transition-all duration-300" dir="rtl" :class="solid
     ? 'border-b border-border bg-background/90 shadow-sm backdrop-blur-xl'
@@ -67,7 +66,6 @@ const closeMobileMenu = () => {
         <img :src="logo" alt="إكسبرس هاي تك"
           class="h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-[1.03]" />
       </NuxtLink>
-
       <!-- Desktop Navigation -->
       <nav class="hidden flex-1 items-center justify-center gap-7 md:flex" dir="rtl" :class="solid
         ? 'text-muted-foreground hover:text-primary'
@@ -75,28 +73,21 @@ const closeMobileMenu = () => {
         <NuxtLink v-for="link in links" :key="link.label" :to="link.to"
           class="flex items-center gap-1 text-sm font-semibold text-muted-foreground transition-colors hover:text-primary">
           {{ link.label }}
-
           <ChevronDown v-if="link.dropdown" class="h-3.5 w-3.5" />
         </NuxtLink>
       </nav>
-
-
       <!-- Mobile Actions -->
       <div class="mr-auto flex items-center gap-2 md:hidden">
-
-
         <!-- Mobile Menu Button -->
         <button type="button" :aria-expanded="isMobileMenuOpen" aria-label="فتح القائمة"
           :class="!solid ? 'text-white' : ''"
           class="grid  h-10 w-10 place-items-center rounded-full border border-border text-foreground transition-colors hover:bg-muted"
           @click="isMobileMenuOpen = !isMobileMenuOpen">
           <X v-if="isMobileMenuOpen" class="h-5 w-5" />
-
           <Menu v-else class="h-5 w-5" />
         </button>
       </div>
     </div>
-
     <!-- Mobile Menu -->
     <Transition enter-active-class="transition duration-200 ease-out" enter-from-class="translate-y-[-10px] opacity-0"
       enter-to-class="translate-y-0 opacity-100" leave-active-class="transition duration-150 ease-in"
@@ -106,11 +97,9 @@ const closeMobileMenu = () => {
           <!-- Search -->
           <div class="relative mb-4">
             <Search class="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-
             <input v-model="searchQuery" type="search" placeholder="البحث عن المنتجات..."
               class="h-11 w-full rounded-xl border border-border bg-muted pr-10 pl-4 text-sm outline-none placeholder:text-muted-foreground focus:border-primary" />
           </div>
-
           <!-- Navigation Links -->
           <nav class="flex flex-col">
             <NuxtLink v-for="link in links" :key="link.label" :to="link.to"
@@ -119,12 +108,9 @@ const closeMobileMenu = () => {
               <span>
                 {{ link.label }}
               </span>
-
               <ChevronDown v-if="link.dropdown" class="h-4 w-4" />
             </NuxtLink>
           </nav>
-
-
         </div>
       </div>
     </Transition>

@@ -138,9 +138,9 @@ onUnmounted(() => {
     <!-- الأقسام الرئيسية -->
     <main class="space-y-0">
       <hero />
-      <categories />
-      <services />
+      <!-- <categories /> -->
       <SmartHome />
+      <services />
       <lapphone />
       <AdvantagesSection />
       <contactUs />
