@@ -69,7 +69,7 @@ const closeMobileMenu = () => {
       </NuxtLink>
 
       <!-- Desktop Navigation -->
-      <nav class="hidden flex-1 items-center justify-center gap-7 md:flex" :class="solid
+      <nav class="hidden flex-1 items-center justify-center gap-7 md:flex" dir="rtl" :class="solid
         ? 'text-muted-foreground hover:text-primary'
         : 'text-white/90 hover:text-white'">
         <NuxtLink v-for="link in links" :key="link.label" :to="link.to"

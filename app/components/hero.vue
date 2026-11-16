@@ -38,10 +38,12 @@ useHead({
   ],
 });
 
-const stats = [
-  { value: "50K+", label: "عميل سعيد" },
-  { value: "20K+", label: "عملية صيانة" },
-  { value: "500+", label: "منتج متوفر" },
+const services = [
+  { icon: "💡", label: "إضاءة ذكية" },
+  { icon: "📹", label: "كاميرات مراقبة" },
+  { icon: "🔒", label: "أقفال ذكية" },
+  { icon: "🌡️", label: "تحكم بالتكييف" },
+  { icon: "🔊", label: "أنظمة صوتية" },
 ];
 
 const categories = [
@@ -102,17 +104,13 @@ const categories = [
         </div>
 
         <!-- Stats -->
-        <dl class="hero-item hero-item-5 mt-12 flex max-w-lg justify-center divide-x divide-white/25 divide-x-reverse">
-          <div v-for="(stat, index) in stats" :key="stat.label" class="stat-item group px-5 sm:px-8"
-            :style="{ '--item-index': index }">
-            <dt class="text-2xl font-extrabold text-white transition-colors duration-300 group-hover:text-primary">
-              {{ stat.value }}
-            </dt>
-            <dd class="mt-1 text-xs font-medium text-white/70">
-              {{ stat.label }}
-            </dd>
-          </div>
-        </dl>
+        <ul class="hero-item hero-item-5 mt-12 flex flex-wrap justify-center gap-3">
+          <li v-for="item in services" :key="item.label"
+            class="flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm">
+            <span>{{ item.icon }}</span>
+            <span>{{ item.label }}</span>
+          </li>
+        </ul>
       </div>
     </section>
   </main>
