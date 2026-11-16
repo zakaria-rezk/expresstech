@@ -8,6 +8,7 @@ import {
 } from "lucide-vue-next";
 
 // import smartHomeImg from "~/assets/smart-home.jpg";
+import lightimg from "~/assets/585bda17e8fdded14640101564f3efd5.jpg";
 import smartHomeImg from "~/assets/istockphoto-2272234403-1024x1024.jpg";
 
 const smartHomeFeatures = [

@@ -27,6 +27,11 @@ const triggerScene = (sceneKey: string) => {
 const whatsappNumber = "201234567890";
 const whatsappMessage = encodeURIComponent("مرحباً، أود الاستفسار عن خدمات تأسيس المنازل الذكية.");
 const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+import engimg from "~/assets/e7ad0a6434c6949463e856485f24567e.jpg";
+import lightimg from "~/assets/585bda17e8fdded14640101564f3efd5.jpg";
+import aircondition from "~/assets/a73d3654fae3bba4e51e69e2f8ae4823.jpg";
+import cam from "~/assets/159273584eaf317f010716c65c2b7072.jpg";
+import voi from "~/assets/cd0dd1c23b01d78c363fa0c916d0bb3a.jpg";
 
 // بيانات خطوات التأسيس
 const infrastructureSteps = [
@@ -58,28 +63,28 @@ const subsystems = [
     title: "الإضاءة الذكية والتحكم بالأجواء",
     description: "إضاءة تفاعلية تتغير تدريجياً حسب الوقت، وحسب حالتك المزاجية، مع إمكانية التحكم في كل زاوية بدقة متناهية.",
     icon: Lightbulb,
-    image: "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?q=80&w=800&auto=format&fit=crop",
+    image: lightimg,
     tags: ["DALI", "RGB Play", "Dimming", "Motion Sensor"]
   },
   {
     title: "التكييف والتحكم بالمناخ (HVAC)",
     description: "تنظيم حرارة الغرف تلقائياً بناءً على وجود الأشخاص، وتوفير الطاقة عند مغادرة المنزل.",
     icon: Thermometer,
-    image: "https://images.unsplash.com/photo-1585338107529-13afc5f02586?q=80&w=800&auto=format&fit=crop",
+    image: aircondition,
     tags: ["Climate Control", "Smart Thermostat", "Energy Saving"]
   },
   {
     title: "الأمان وحماية المقدمة (Security)",
     description: "كاميرات مراقبة ذكية بالذكاء الاصطناعي، مستشعرات حركة ودخان، وأقفال أبواب ذكية تعمل ببصمة الإصبع والوجه.",
     icon: Lock,
-    image: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=800&auto=format&fit=crop",
+    image: cam,
     tags: ["Face Recognition", "CCTV 4K", "Smart Locks", "Fire Alarm"]
   },
   {
     title: "الأنظمة الصوتية والترفيهية المتكاملة",
     description: "توزيع السماعات المخفية في كل الغرف لتستمتع بموسيقاك المفضلة أينما كنت، مع نظام سينما منزلية خارق.",
     icon: Volume2,
-    image: "https://images.unsplash.com/photo-1545454675-3531b543be5d?q=80&w=800&auto=format&fit=crop",
+    image: voi,
     tags: ["Multi-Room Audio", "Dolby Atmos", "Hi-Fi Speakers"]
   }
 ];
@@ -191,8 +196,7 @@ const voiceScenesList = [
             <div
               class="absolute -inset-1 rounded-3xl bg-gradient-to-r from-primary to-cyan-500 opacity-30 blur-xl transition duration-500 group-hover:opacity-60" />
             <div class="relative overflow-hidden rounded-3xl border border-border bg-card shadow-2xl">
-              <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=1024&auto=format&fit=crop"
-                alt="هندسة التمديدات الذكية"
+              <img :src="engimg" alt="هندسة التمديدات الذكية"
                 class="w-full h-[450px] object-cover transition-transform duration-700 group-hover:scale-105" />
             </div>
           </div>
