@@ -87,7 +87,8 @@ const closeMobileMenu = () => {
 
         <!-- Mobile Menu Button -->
         <button type="button" :aria-expanded="isMobileMenuOpen" aria-label="فتح القائمة"
-          class="grid h-10 w-10 place-items-center rounded-full border border-border text-foreground transition-colors hover:bg-muted"
+          :class="!solid ? 'text-white' : ''"
+          class="grid  h-10 w-10 place-items-center rounded-full border border-border text-foreground transition-colors hover:bg-muted"
           @click="isMobileMenuOpen = !isMobileMenuOpen">
           <X v-if="isMobileMenuOpen" class="h-5 w-5" />
 
