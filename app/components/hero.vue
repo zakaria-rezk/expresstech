@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import {
   ArrowLeft,
@@ -16,7 +15,7 @@ import {
 import laptopImg from "~/assets/laptop.png";
 import phoneImg from "~/assets/phone.png";
 import headphonesImg from "~/assets/headphones.png";
-
+import monitorImg from "~/assets/expresstech-enhanced-1080p (1).mp4";
 useHead({
   htmlAttrs: {
     lang: "ar",
@@ -67,146 +66,60 @@ const categories = [
     </div>
 
     <!-- Hero Section -->
-    <section
-      class="mx-auto grid max-w-7xl gap-14 px-5 py-12 md:py-20 lg:grid-cols-2"
-    >
+    <section class="relative isolate flex min-h-[85vh] items-center py-12 justify-center overflow-hidden">
+      <!-- Background Video -->
+      <video class="absolute inset-0 -z-20 h-full w-full object-cover" :src="monitorImg" autoplay muted loop
+        playsinline preload="auto" aria-hidden="true"></video>
+
+      <!-- Dark overlay for text readability -->
+      <div class="absolute inset-0 -z-10 bg-gradient-to-b from-black/70 via-black/55 to-black/75"></div>
+
       <!-- Content -->
-      <div class="hero-content pt-6">
+      <div class="hero-content mx-auto flex max-w-3xl flex-col items-center px-5 py-20 text-center md:py-28">
         <!-- Badge -->
         <div
-          class="hero-item hero-item-1 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-bold text-primary backdrop-blur-sm transition-colors duration-300 hover:bg-primary/10"
-        >
+          class="hero-item hero-item-1 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-xs font-bold text-white backdrop-blur-sm transition-colors duration-300 hover:bg-white/20">
           <Zap class="h-3.5 w-3.5 text-primary" />
           <span>موزع معتمد ومركز صيانة</span>
         </div>
 
         <!-- Heading -->
         <h1
-          class="hero-item hero-item-2 mt-6 text-5xl font-extrabold leading-[1.08] tracking-tight text-brand-ink md:text-6xl"
-        >
+          class="hero-item hero-item-2 mt-6 text-5xl font-extrabold leading-[1.08] tracking-tight text-white md:text-6xl">
           شريكك
-          <span
-            class="heading-highlight text-primary transition-opacity duration-300 hover:opacity-80"
-          >
+          <span class="heading-highlight text-primary transition-opacity duration-300 hover:opacity-80">
             التقني
           </span>
           المتكامل
         </h1>
 
         <!-- Description -->
-        <p
-          class="hero-item hero-item-3 mt-6 max-w-md text-base leading-relaxed text-muted-foreground"
-        >
+        <p class="hero-item hero-item-3 mt-6 max-w-xl text-base leading-relaxed text-white/80">
           نقدم لك أحدث الأجهزة الإلكترونية، وخدمات الصيانة الاحترافية،
           والحلول التقنية المتطورة — كل ما تحتاجه تحت سقف واحد.
         </p>
 
         <!-- Buttons -->
-        <div class="hero-item hero-item-4 mt-8 flex flex-wrap gap-3">
-          <NuxtLink
-            to="#services"
-            class="hero-button group inline-flex h-12 items-center gap-2 rounded-xl border border-border bg-background px-6 text-sm font-bold text-brand-ink shadow-sm transition-all duration-300 hover:border-primary/50 hover:bg-surface hover:text-primary active:scale-[0.98]"
-          >
+        <div class="hero-item hero-item-4 mt-8 flex flex-wrap justify-center gap-3">
+          <NuxtLink to="#services"
+            class="hero-button group inline-flex h-12 items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-6 text-sm font-bold text-white shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-primary/60 hover:bg-white/20 hover:text-primary active:scale-[0.98]">
             <span>خدماتنا</span>
-            <ArrowLeft
-              class="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1"
-            />
+            <ArrowLeft class="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />
           </NuxtLink>
         </div>
 
         <!-- Stats -->
-        <dl
-          class="hero-item hero-item-5 mt-12 flex max-w-lg divide-x divide-border divide-x-reverse"
-        >
-          <div
-            v-for="(stat, index) in stats"
-            :key="stat.label"
-            class="stat-item group pl-5 pr-5 first:pr-0 sm:pl-8 sm:pr-8"
-            :style="{ '--item-index': index }"
-          >
-            <dt
-              class="text-2xl font-extrabold text-brand-ink transition-colors duration-300 group-hover:text-primary"
-            >
+        <dl class="hero-item hero-item-5 mt-12 flex max-w-lg justify-center divide-x divide-white/25 divide-x-reverse">
+          <div v-for="(stat, index) in stats" :key="stat.label" class="stat-item group px-5 sm:px-8"
+            :style="{ '--item-index': index }">
+            <dt class="text-2xl font-extrabold text-white transition-colors duration-300 group-hover:text-primary">
               {{ stat.value }}
             </dt>
-            <dd class="mt-1 text-xs font-medium text-muted-foreground">
+            <dd class="mt-1 text-xs font-medium text-white/70">
               {{ stat.label }}
             </dd>
           </div>
         </dl>
-      </div>
-
-      <!-- Hero Visual -->
-      <div class="hero-visual relative">
-        <!-- Ambient Glow -->
-        <div
-          class="hero-glow pointer-events-none absolute inset-0 -z-10 rounded-full bg-primary/10 blur-3xl"
-        ></div>
-
-        <!-- Warranty Badge -->
-        <div
-          class="warranty-badge absolute -right-2 top-2 z-20 flex items-center gap-3 rounded-2xl border border-border/80 bg-card/90 px-4 py-3 shadow-md backdrop-blur-xl transition-all duration-300 hover:border-primary/30 hover:shadow-lg sm:-right-4 lg:right-0"
-        >
-          <div
-            class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10"
-          >
-            <ShieldCheck class="h-5 w-5 text-primary" />
-          </div>
-
-          <div>
-            <p class="text-xs font-bold text-brand-ink">
-              ضمان موثوق
-            </p>
-            <p class="mt-1 text-[11px] text-muted-foreground">
-              جميع المنتجات مشمولة بالضمان
-            </p>
-          </div>
-        </div>
-
-        <!-- Product Grid -->
-        <div class="product-grid grid grid-cols-2 gap-5 pt-16">
-          <!-- Laptop -->
-          <div class="product-card product-card-one group">
-            <div class="product-image-wrap">
-              <img
-                :src="laptopImg"
-                alt="لابتوب"
-                width="768"
-                height="768"
-                fetchpriority="high"
-                class="product-image h-full w-full object-contain"
-              />
-            </div>
-          </div>
-
-          <!-- Phone -->
-          <div class="product-card product-card-two group">
-            <div class="product-image-wrap">
-              <img
-                :src="phoneImg"
-                alt="هاتف ذكي"
-                width="768"
-                height="1024"
-                fetchpriority="high"
-                class="product-image h-full w-full object-contain"
-              />
-            </div>
-          </div>
-
-          <!-- Headphones -->
-          <div class="product-card product-card-three group">
-            <div class="product-image-wrap">
-              <img
-                :src="headphonesImg"
-                alt="سماعات رأس"
-                width="768"
-                height="768"
-                loading="lazy"
-                class="product-image h-full w-full object-contain"
-              />
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   </main>
@@ -251,6 +164,7 @@ const categories = [
   from {
     transform: translate3d(0, 0, 0) scale(0.9);
   }
+
   to {
     transform: translate3d(35px, -25px, 0) scale(1.12);
   }
@@ -298,6 +212,7 @@ const categories = [
     opacity: 0;
     transform: translateY(18px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -310,6 +225,7 @@ const categories = [
     transform: translateX(-25px) scale(0.96);
     filter: blur(7px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0) scale(1);
@@ -323,6 +239,7 @@ const categories = [
     transform: translateY(22px);
     filter: blur(4px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -341,13 +258,14 @@ const categories = [
 }
 
 @keyframes headingGlow {
+
   0%,
   100% {
     text-shadow: 0 0 0 transparent;
   }
+
   50% {
-    text-shadow: 0 0 24px
-      color-mix(in srgb, var(--color-primary) 22%, transparent);
+    text-shadow: 0 0 24px color-mix(in srgb, var(--color-primary) 22%, transparent);
   }
 }
 
@@ -407,13 +325,10 @@ const categories = [
 }
 
 .product-card:hover {
-  border-color: color-mix(
-    in srgb,
-    var(--color-primary) 30%,
-    transparent
-  );
-  box-shadow: 0 24px 60px -24px
-    color-mix(in srgb, var(--color-primary) 28%, transparent);
+  border-color: color-mix(in srgb,
+      var(--color-primary) 30%,
+      transparent);
+  box-shadow: 0 24px 60px -24px color-mix(in srgb, var(--color-primary) 28%, transparent);
 }
 
 .product-card:hover .product-image {
@@ -426,6 +341,7 @@ const categories = [
     translate: 0 28px;
     scale: 0.94;
   }
+
   to {
     opacity: 1;
     translate: 0 0;
@@ -434,10 +350,12 @@ const categories = [
 }
 
 @keyframes cardFloat {
+
   0%,
   100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-8px);
   }
@@ -465,11 +383,13 @@ const categories = [
 }
 
 @keyframes glowPulse {
+
   0%,
   100% {
     opacity: 0.06;
     scale: 0.92;
   }
+
   50% {
     opacity: 0.15;
     scale: 1.08;
@@ -495,6 +415,7 @@ const categories = [
     translate: 0 -12px;
     scale: 0.95;
   }
+
   to {
     opacity: 1;
     translate: 0 0;
@@ -517,8 +438,7 @@ const categories = [
 
 .hero-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px -12px
-    color-mix(in srgb, var(--color-primary) 45%, transparent);
+  box-shadow: 0 8px 25px -12px color-mix(in srgb, var(--color-primary) 45%, transparent);
 }
 
 .stat-item {
@@ -531,6 +451,7 @@ const categories = [
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -566,6 +487,7 @@ const categories = [
 ========================================= */
 
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
